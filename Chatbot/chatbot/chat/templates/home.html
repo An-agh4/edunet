@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Interface</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/chat.js' %}"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <h2>Chatbot Interface</h2>
+        <form class="chat-form" method="post">
+            {% csrf_token %}
+            <input type="text" name="prompt" placeholder="Enter your prompt here..." required>
+            <button type="submit">Send</button>
+        </form>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-message">
+                <div class="message-content">Hello! I'm your AI assistant. How can I help you today?</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

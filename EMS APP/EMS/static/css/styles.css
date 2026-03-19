@@ -1,0 +1,63 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navbar container */
+nav {
+    background-color: #2c3e50;
+    padding: 15px 0;
+}
+
+/* Remove bullets */
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+/* Space between items */
+nav ul li {
+    margin: 0 20px;
+}
+
+/* Links */
+nav ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 8px 15px;
+    transition: 0.3s ease;
+}
+
+/* Hover effect */
+nav ul li a:hover {
+    background-color: #3498db;
+    border-radius: 5px;
+}
+
+/* Active link (optional) */
+nav ul li a.active {
+    background-color: #1abc9c;
+    border-radius: 5px;
+}
+
+/* Footer styling */
+footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 15px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Footer text */
+footer p {
+    margin: 0;
+    font-size: 14px;
+}

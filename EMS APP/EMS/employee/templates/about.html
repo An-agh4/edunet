@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h2>About page</h2>
+    {% lorem 1 b random %}
+    <br>
+    <center>
+    <img src="{% static "images/images.png" %}" alt="" width=500px heigth=auto>
+    </center>
+{% endblock %}

@@ -1,0 +1,28 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*~
+
+# Virtual environments
+env/
+**/env/
+
+# Django database files
+*.sqlite3
+*.db
+
+# VS Code settings
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Ignore git directories from nested repos
+.git/

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Employee Management System</h1>
+            <p>Manage and view employee information with ease</p>
+        </div>
+
+        <div class="content">
+            <button id="fetch-btn" class="fetch-btn">Fetch Employee Data</button>
+            
+            <div class="search-section">
+                <div class="search-title">Search Employee</div>
+                <form class="search-form" id="search-form">
+                    <div class="search-input-group">
+                        <label for="employee-id" class="search-label">Employee ID</label>
+                        <input 
+                            type="number" 
+                            id="employee-id" 
+                            class="search-input" 
+                            placeholder="Enter employee ID" 
+                            min="1"
+                            required
+                        >
+                    </div>
+                    <button type="submit" class="search-btn" id="search-btn">Search</button>
+                </form>
+            </div>
+
+            <div id="data-display" class="data-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_URL = 'http://localhost:8000/api'; // Base URL for API endpoints
+        const display = document.getElementById('data-display'); // Main display container
+
+        // Helper Functions
+        // Sets button loading state and text
+        const setButtonState = (btn, loading, text) => {
+            btn.disabled = loading; // Enable/disable button
+            btn.textContent = text; // Update button text
+        };
+
+        // Shows loading message in display area
+        const showLoading = (message) => {
+            display.innerHTML = `<div class="loading">${message}</div>`;
+        };
+
+        // Shows error message in display area
+        const showError = (message) => {
+            display.innerHTML = `<div class="error">❌ ${message}</div>`;
+        };
+
+        // Builds HTML table from employee array
+        const buildEmployeeTable = (employees) => {
+            // Map each employee to table row HTML
+            const rows = employees.map(emp => `
+                <tr>
+                    <td><span class="employee-name">${emp.name}</span></td>
+                    <td><span class="employee-designation">${emp.desg}</span></td>
+                    <td><span class="employee-salary">$${emp.salary}</span></td>
+                </tr>
+            `).join(''); // Join all rows into single string
+
+            // Return complete table HTML
+            return `
+                <h2>Employee List</h2>
+                <table class="employee-table">
+                    <thead>
+                        <tr>
+                            <th>Employee Name</th>
+                            <th>Designation</th>
+                            <th>Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        };
+
+        // Event Listener: Fetch All Employees
+        document.getElementById('fetch-btn').addEventListener('click', function() {
+            const btn = this; // Reference to clicked button
+            setButtonState(btn, true, 'Loading...'); // Show loading state
+            showLoading('Fetching employee data...'); // Display loading message
+
+            // Fetch all employees from API
+            fetch(`${API_URL}/employees`)
+                .then(res => res.json()) // Parse JSON response
+                .then(data => {
+                    // Check if data exists, build table or show empty message
+                    display.innerHTML = data.length
+                        ? buildEmployeeTable(data) // Build table if data exists
+                        : '<h2>Employee List</h2><div class="no-data">No employees found in the database.</div>';
+                })
+                .catch(err => showError(`Error fetching data: ${err.message}`)) // Handle errors
+                .finally(() => setButtonState(btn, false, 'Fetch Employee Data')); // Reset button
+        });
+
+        // Event Listener: Search Single Employee
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form submission reload
+
+            const btn = document.getElementById('search-btn'); // Search button reference
+            const employeeId = document.getElementById('employee-id').value.trim(); // Get input value
+
+            // Validate input
+            if (!employeeId) {
+                showError('Please enter an employee ID.');
+                return;
+            }
+
+            setButtonState(btn, true, 'Searching...'); // Show searching state
+            showLoading('Searching for employee...'); // Display searching message
+
+            // Fetch specific employee by ID
+            fetch(`${API_URL}/employees/${employeeId}`)
+                .then(res => {
+                    // Check response status
+                    if (!res.ok) throw new Error(res.status === 404 ? 'Employee not found.' : `HTTP ${res.status}`);
+                    return res.json(); // Parse JSON response
+                })
+                .then(emp => {
+                    // Build and display single employee card
+                    display.innerHTML = `
+                        <div class="single-employee">
+                            <div class="single-employee-header">
+                                <h3>${emp.name}</h3>
+                            </div>
+                            <div class="employee-info">
+                                <div class="info-field">
+                                    <div class="info-label">Employee ID</div>
+                                    <div class="info-value">${emp.id}</div>
+                                </div>
+                                <div class="info-field">
+                                    <div class="info-label">Designation</div>
+                                    <div class="info-value">${emp.desg}</div>
+                                </div>
+                                <div class="info-field">
+                                    <div class="info-label">Salary</div>
+                                    <div class="info-value salary">$${emp.salary}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                })
+                .catch(err => showError(`Error: ${err.message}`)) // Handle errors
+                .finally(() => setButtonState(btn, false, 'Search')); // Reset button
+        });
+    </script>
+</body>
+</html>

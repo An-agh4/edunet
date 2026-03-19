@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h1>Data received {{emps.emp1}}  {{emps.emp2}}</h1>
+    <center>
+        <h2>Employee Table</h2>
+    <table border=1>
+        <tr>
+            <th>Name</th>
+            <th>Desg</th>
+            <th>Salary</th>
+        </tr>
+        {% for emp in emps%}
+        <tr>
+            <td>{{emp.name}}</td>
+            <td>{{emp.desg}}</td>
+            <td>{{emp.salary}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</center>
+{% endblock %}
